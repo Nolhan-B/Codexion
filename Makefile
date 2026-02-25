@@ -6,7 +6,6 @@ CCFLAGS = -Wall -Wextra -Werror -pthread
 SRC = \
 codexion.c \
 main.c \
-codexion.h
 
 OBJ = $(SRC:.c=.o)
 
@@ -16,7 +15,7 @@ $(NAME): $(OBJ)
 	$(CC) $(CCFLAGS) $(OBJ) -o $(NAME)
 
 %.o: %.c
-	$(CC) $(CCFLAGS) -c $< -o $@
+	$(CC) $(CCFLAGS) -c $< -o $@ -I .
 
 clean:
 	rm -rf $(OBJ)
