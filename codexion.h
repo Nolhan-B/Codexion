@@ -55,7 +55,13 @@ typedef struct s_sim
 	pthread_mutex_t	log_mutex;
 }	t_sim;
 
-/* Parsing */
+/* codexion.c */
 int		parse_args(int ac, char **av, t_config *config);
+
+/* init.c */
+void	destroy_initiated_mutex(t_sim *sim, int last_done);
+int		init_dongles(t_sim *sim);
+void	init_coders(t_sim *sim);
+int		init_simulation(t_sim *sim);
 
 #endif
