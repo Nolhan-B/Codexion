@@ -64,4 +64,7 @@ int		init_dongles(t_sim *sim);
 void	init_coders(t_sim *sim);
 int		init_simulation(t_sim *sim);
 
+/* utils.c */
+long	get_time_ms(void);
+
 #endif

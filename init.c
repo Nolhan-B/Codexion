@@ -36,16 +36,7 @@ int init_dongles(t_sim *sim)
 	}
 	return (0);
 }
-// typedef struct s_coder
-// {
-// 	int				id;
-// 	pthread_t		thread;
-// 	t_dongle		*left_dongle;
-// 	t_dongle		*right_dongle;
-// 	long			last_compile_start;
-// 	int				compile_count;
-// 	struct s_sim	*sim;
-// }	t_coder;
+
 void init_coders(t_sim *sim)
 {
 	int	i;
@@ -59,10 +50,6 @@ void init_coders(t_sim *sim)
 		sim->coders[i].sim = sim;
 		sim->coders[i].left_dongle = &sim->dongles[i];
 		sim->coders[i].right_dongle = &sim->dongles[(i + 1) % sim->config.nb_coders];
-		// if (i == sim->config.nb_coders - 1)
-		// 	sim->coders[i].right_dongle = &sim->dongles[0];
-		// else
-		// 	sim->coders[i].right_dongle = &sim->dongles[i + 1];
 		i++;
 	}
 }
@@ -97,5 +84,7 @@ int init_simulation(t_sim *sim)
 		return (-1);
 	}
 	init_coders(sim);
+	sim->start_time = get_time_ms();
+	sim->running = 1;
 	return (0);
 }

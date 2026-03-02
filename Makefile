@@ -6,6 +6,8 @@ CCFLAGS = -Wall -Wextra -Werror -pthread
 SRC = \
 codexion.c \
 main.c \
+init.c \
+utils.c
 
 OBJ = $(SRC:.c=.o)
 
