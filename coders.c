@@ -55,6 +55,7 @@ void *coder_routine(void *arg)
 		take_dongle(coder, coder->left_dongle);
 		take_dongle(coder, coder->right_dongle);
 
+		coder->last_compile_start = get_time_ms();
 		print_log(coder->sim, coder->id, "is compiling");
 		usleep(coder->sim->config.time_to_compile * 1000);
 

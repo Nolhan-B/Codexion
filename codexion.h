@@ -53,6 +53,7 @@ typedef struct s_sim
 	pthread_mutex_t	mutex;
 	long			start_time;
 	pthread_mutex_t	log_mutex;
+	pthread_t		monitor_thread;
 }	t_sim;
 
 /* codexion.c */
@@ -76,5 +77,8 @@ int		create_threads(t_sim *sim);
 
 /* coders.c */
 void	*coder_routine(void *arg);
+
+/* monitor.c */
+void	*monitor_routine(void *arg);
 
 #endif

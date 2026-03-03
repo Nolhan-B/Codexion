@@ -17,6 +17,7 @@ int main(int ac, char **av)
 		pthread_join(sim.coders[i].thread, NULL);
 		i++;
 	}
+	pthread_join(sim.monitor_thread, NULL);
 	destroy_sim(&sim);
 	printf("Simulation destroyed\n");
 	return (0);

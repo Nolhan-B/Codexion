@@ -10,7 +10,8 @@ init.c \
 utils.c \
 destroy_sim.c \
 init_th.c \
-coders.c
+coders.c \
+monitor.c
 
 OBJ = $(SRC:.c=.o)
 
