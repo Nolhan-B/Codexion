@@ -22,9 +22,12 @@
 
 static void take_dongle(t_coder *coder, t_dongle *dongle)
 {
-	long	now;
+	long now;
+	long priority;
 
 	pthread_mutex_lock(&dongle->mutex);
+
+	// Attendre la fin du cooldown
 	while (1)
 	{
 		now = get_time_ms();
@@ -34,12 +37,37 @@ static void take_dongle(t_coder *coder, t_dongle *dongle)
 		usleep(1000);
 		pthread_mutex_lock(&dongle->mutex);
 	}
+
+	// Calculer la priorité selon FIFO ou EDF
+	if (coder->sim->config.scheduler == FIFO)
+		priority = get_time_ms();  // FIFO : timestamp actuel
+	else
+		priority = coder->last_compile_start + coder->sim->config.time_to_burnout;  // EDF : deadline
+
+	// S'inscrire dans la queue
+	queue_push(dongle->queue, coder, priority);
+
+	// Attendre d'être le plus prioritaire
+	while (1)
+	{
+		if (!queue_is_empty(dongle->queue) && dongle->queue->nodes[0].coder == coder && !dongle->is_taken)
+			break;
+		pthread_cond_wait(&dongle->cond, &dongle->mutex);
+	}
+
+	// Retirer de la queue et prendre le dongle
+	queue_pop(dongle->queue);
+	dongle->is_taken = 1;
 	print_log(coder->sim, coder->id, "has taken a dongle");
+	pthread_mutex_unlock(&dongle->mutex);
 }
 
 static void release_dongle(t_coder *coder, t_dongle *dongle)
 {
+	pthread_mutex_lock(&dongle->mutex);
 	dongle->cooldown_end = get_time_ms() + coder->sim->config.dongle_cooldown;
+	dongle->is_taken = 0;
+	pthread_cond_broadcast(&dongle->cond);  // Réveiller tous les threads en attente
 	pthread_mutex_unlock(&dongle->mutex);
 }
 

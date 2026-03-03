@@ -11,7 +11,9 @@ utils.c \
 destroy_sim.c \
 init_th.c \
 coders.c \
-monitor.c
+monitor.c \
+queue_init.c \
+queue.c
 
 OBJ = $(SRC:.c=.o)
 

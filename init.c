@@ -9,6 +9,7 @@ void  destroy_initiated_mutex(t_sim *sim, int last_done)
 	{
 		pthread_mutex_destroy(&sim->dongles[j].mutex);
 		pthread_cond_destroy(&sim->dongles[j].cond);
+		queue_destroy(sim->dongles[j].queue);
 		j++;
 	}
 }
@@ -32,6 +33,15 @@ int init_dongles(t_sim *sim)
 			return (-1);
 		}
 		sim->dongles[i].cooldown_end = 0;
+		sim->dongles[i].is_taken = 0;
+		sim->dongles[i].queue = queue_init(sim->config.nb_coders, sim->config.scheduler);
+		if (!sim->dongles[i].queue)
+		{
+			pthread_mutex_destroy(&sim->dongles[i].mutex);
+			pthread_cond_destroy(&sim->dongles[i].cond);
+			destroy_initiated_mutex(sim, i);
+			return (-1);
+		}
 		i++;
 	}
 	return (0);

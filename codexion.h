@@ -8,6 +8,9 @@
 # include <sys/time.h>
 # include <unistd.h>
 
+typedef struct s_coder t_coder;
+typedef struct s_sim t_sim;
+
 typedef enum e_scheduler
 {
 	FIFO,
@@ -26,11 +29,27 @@ typedef struct s_config
 	t_scheduler	scheduler;
 }	t_config;
 
+typedef struct s_queue_node
+{
+	t_coder	*coder;
+	long	priority;
+}	t_queue_node;
+
+typedef struct s_priority_queue
+{
+	t_queue_node	*nodes;
+	int				size;
+	int				capacity;
+	t_scheduler		scheduler;
+}	t_priority_queue;
+
 typedef struct s_dongle
 {
-	pthread_mutex_t	mutex;
-	pthread_cond_t	cond;
-	long			cooldown_end;
+	pthread_mutex_t			mutex;
+	pthread_cond_t			cond;
+	long					cooldown_end;
+	t_priority_queue		*queue;
+	int						is_taken;
 }	t_dongle;
 
 typedef struct s_coder
@@ -82,5 +101,14 @@ void	*coder_routine(void *arg);
 
 /* monitor.c */
 void	*monitor_routine(void *arg);
+
+/* queue_init.c */
+t_priority_queue	*queue_init(int capacity, t_scheduler scheduler);
+void				queue_destroy(t_priority_queue *queue);
+
+/* queue.c */
+int					queue_push(t_priority_queue *queue, t_coder *coder, long priority);
+t_coder				*queue_pop(t_priority_queue *queue);
+int					queue_is_empty(t_priority_queue *queue);
 
 #endif
