@@ -65,10 +65,11 @@ void	init_coders(t_sim *sim);
 int		init_simulation(t_sim *sim);
 
 /* destroy_sim.c */
-void destroy_sim(t_sim *sim);
+void	destroy_sim(t_sim *sim);
 
 /* utils.c */
 long	get_time_ms(void);
+void	print_log(t_sim *sim, int coder_id, char *msg);
 
 /* init_th.c */
 int		create_threads(t_sim *sim);
