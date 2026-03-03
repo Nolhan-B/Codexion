@@ -22,12 +22,24 @@
 
 static void take_dongle(t_coder *coder, t_dongle *dongle)
 {
+	long	now;
+
 	pthread_mutex_lock(&dongle->mutex);
+	while (1)
+	{
+		now = get_time_ms();
+		if (now >= dongle->cooldown_end)
+			break;
+		pthread_mutex_unlock(&dongle->mutex);
+		usleep(1000);
+		pthread_mutex_lock(&dongle->mutex);
+	}
 	print_log(coder->sim, coder->id, "has taken a dongle");
 }
 
 static void release_dongle(t_coder *coder, t_dongle *dongle)
 {
+	dongle->cooldown_end = get_time_ms() + coder->sim->config.dongle_cooldown;
 	pthread_mutex_unlock(&dongle->mutex);
 }
 
