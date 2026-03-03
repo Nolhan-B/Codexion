@@ -69,6 +69,8 @@ int		init_simulation(t_sim *sim);
 void	destroy_sim(t_sim *sim);
 
 /* utils.c */
+int		is_running(t_sim *sim);
+void	stop_simulation(t_sim *sim);
 long	get_time_ms(void);
 void	print_log(t_sim *sim, int coder_id, char *msg);
 

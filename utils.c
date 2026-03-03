@@ -1,5 +1,22 @@
 #include "codexion.h"
 
+int	is_running(t_sim *sim)
+{
+	int	running;
+
+	pthread_mutex_lock(&sim->mutex);
+	running = sim->running;
+	pthread_mutex_unlock(&sim->mutex);
+	return (running);
+}
+
+void stop_simulation(t_sim *sim)
+{
+	pthread_mutex_lock(&sim->mutex);
+	sim->running = 0;
+	pthread_mutex_unlock(&sim->mutex);
+}
+
 long	get_time_ms(void)
 {
 	struct timeval	tv;
