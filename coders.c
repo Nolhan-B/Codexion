@@ -20,6 +20,17 @@
 // 	return (1);
 // }
 
+static void take_dongle(t_coder *coder, t_dongle *dongle)
+{
+	pthread_mutex_lock(&dongle->mutex);
+	print_log(coder->sim, coder->id, "has taken a dongle");
+}
+
+static void release_dongle(t_coder *coder, t_dongle *dongle)
+{
+	pthread_mutex_unlock(&dongle->mutex);
+}
+
 void *coder_routine(void *arg)
 {
 	t_coder *coder;
@@ -28,9 +39,16 @@ void *coder_routine(void *arg)
 	printf("Coder %d started\n", coder->id);
 	while (coder->sim->running)
 	{
+		// Prendre les 2 dongles
+		take_dongle(coder, coder->left_dongle);
+		take_dongle(coder, coder->right_dongle);
 
 		print_log(coder->sim, coder->id, "is compiling");
-		usleep(coder->sim->config.time_to_compile * 1000);  // ms → µs
+		usleep(coder->sim->config.time_to_compile * 1000);
+
+		// Relâcher les 2 dongles
+		release_dongle(coder, coder->left_dongle);
+		release_dongle(coder, coder->right_dongle);
 
 		print_log(coder->sim, coder->id, "is debugging");
 		usleep(coder->sim->config.time_to_debug * 1000);
@@ -39,7 +57,6 @@ void *coder_routine(void *arg)
 		usleep(coder->sim->config.time_to_refactor * 1000);
 
 		coder->compile_count++;
-
 		if (coder->compile_count >= coder->sim->config.nb_compiles_required)
 			break;
 	}
