@@ -54,6 +54,22 @@ void init_coders(t_sim *sim)
 	}
 }
 
+static int init_resources(t_sim *sim)
+{
+	if (init_dongles(sim) == -1)
+	{
+		pthread_mutex_destroy(&sim->log_mutex);
+		pthread_mutex_destroy(&sim->mutex);
+		free(sim->coders);
+		free(sim->dongles);
+		return (-1);
+	}
+	init_coders(sim);
+	sim->start_time = get_time_ms();
+	sim->running = 1;
+	return (0);
+}
+
 int init_simulation(t_sim *sim)
 {
 	sim->coders = malloc(sizeof(t_coder) * sim->config.nb_coders);
@@ -75,16 +91,7 @@ int init_simulation(t_sim *sim)
 		free(sim->dongles);
 		return (-1);
 	}
-	if (init_dongles(sim) == -1)
-	{
-		pthread_mutex_destroy(&sim->log_mutex);
-		pthread_mutex_destroy(&sim->mutex);
-		free(sim->coders);
-		free(sim->dongles);
+	if (init_resources(sim) == -1)
 		return (-1);
-	}
-	init_coders(sim);
-	sim->start_time = get_time_ms();
-	sim->running = 1;
-	return (0);
+	return (create_threads(sim));
 }

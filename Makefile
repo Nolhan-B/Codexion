@@ -8,7 +8,9 @@ codexion.c \
 main.c \
 init.c \
 utils.c \
-destroy_sim.c
+destroy_sim.c \
+init_th.c \
+coders.c
 
 OBJ = $(SRC:.c=.o)
 

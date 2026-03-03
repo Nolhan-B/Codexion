@@ -70,4 +70,10 @@ void destroy_sim(t_sim *sim);
 /* utils.c */
 long	get_time_ms(void);
 
+/* init_th.c */
+int		create_threads(t_sim *sim);
+
+/* coders.c */
+void	*coder_routine(void *arg);
+
 #endif
