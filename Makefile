@@ -13,7 +13,8 @@ init_th.c \
 coders.c \
 monitor.c \
 queue_init.c \
-queue.c
+queue.c \
+queue_utils.c
 
 OBJ = $(SRC:.c=.o)
 

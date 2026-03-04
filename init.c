@@ -55,6 +55,7 @@ void init_coders(t_sim *sim)
 	while (i < sim->config.nb_coders)
 	{
 		sim->coders[i].id = i + 1;
+		pthread_mutex_init(&sim->coders[i].mutex, NULL);
 		sim->coders[i].last_compile_start = 0;
 		sim->coders[i].compile_count = 0;
 		sim->coders[i].sim = sim;
