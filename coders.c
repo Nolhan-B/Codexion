@@ -68,7 +68,7 @@ static void release_dongle(t_coder *coder, t_dongle *dongle)
 	pthread_mutex_lock(&dongle->mutex);
 	dongle->cooldown_end = get_time_ms() + coder->sim->config.dongle_cooldown;
 	dongle->is_taken = 0;
-	pthread_cond_broadcast(&dongle->cond);  // Réveiller tous les threads en attente
+	pthread_cond_broadcast(&dongle->cond);
 	pthread_mutex_unlock(&dongle->mutex);
 }
 
@@ -80,9 +80,8 @@ void *coder_routine(void *arg)
     int         single_coder;
 
     coder = (t_coder *)arg;
-
-	if (coder->sim->config.nb_compiles_required == 0)
-		return (NULL);
+    if (coder->sim->config.nb_compiles_required == 0)
+        return (NULL);
 
     single_coder = (coder->sim->config.nb_coders == 1);
 
@@ -102,7 +101,7 @@ void *coder_routine(void *arg)
     else
     {
         first = coder->left_dongle;
-        second = NULL;  // Pas de second dongle
+        second = NULL;
     }
 
     while (is_running(coder->sim))
@@ -110,7 +109,6 @@ void *coder_routine(void *arg)
         if (!is_running(coder->sim))
             break;
 
-        // Prendre le premier dongle
         take_dongle(coder, first);
         if (!is_running(coder->sim))
         {
@@ -118,7 +116,6 @@ void *coder_routine(void *arg)
             break;
         }
 
-        // Prendre le second dongle (sauf si 1 coder)
         if (!single_coder)
         {
             take_dongle(coder, second);
@@ -130,11 +127,15 @@ void *coder_routine(void *arg)
             }
         }
 
+        // Protection mutex pour les variables partagées
+        pthread_mutex_lock(&coder->sim->mutex);
         coder->last_compile_start = get_time_ms();
+        coder->compile_count++;
+        pthread_mutex_unlock(&coder->sim->mutex);
+
         print_log(coder->sim, coder->id, "is compiling");
         usleep(coder->sim->config.time_to_compile * 1000);
 
-        // Relâcher les dongles
         release_dongle(coder, first);
         if (!single_coder)
             release_dongle(coder, second);
@@ -151,9 +152,9 @@ void *coder_routine(void *arg)
         print_log(coder->sim, coder->id, "is refactoring");
         usleep(coder->sim->config.time_to_refactor * 1000);
 
-        coder->compile_count++;
         if (coder->compile_count >= coder->sim->config.nb_compiles_required)
             break;
     }
+
     return (NULL);
 }
