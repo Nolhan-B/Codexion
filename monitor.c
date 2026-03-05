@@ -8,13 +8,18 @@ void *monitor_routine(void *arg)
 	long deadline;
 
 	sim = (t_sim *)arg;
-	while (sim->running)
+	while (is_running(sim))
 	{
 		usleep(10000);
 		now = get_time_ms();
 		i = 0;
 		while (i < sim->config.nb_coders)
 		{
+			if (sim->coders[i].compile_count >= sim->config.nb_compiles_required)
+			{
+				i++;
+				continue;
+			}
 			if (sim->coders[i].last_compile_start == 0)
 				deadline = sim->start_time + sim->config.time_to_burnout;
 			else
@@ -23,7 +28,7 @@ void *monitor_routine(void *arg)
 			if (now > deadline)
 			{
 				print_log(sim, sim->coders[i].id, "burned out");
-				sim->running = 0;
+				stop_simulation(sim);
 				return (NULL);
 			}
 			i++;

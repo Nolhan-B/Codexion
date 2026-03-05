@@ -58,6 +58,7 @@ static void take_dongle(t_coder *coder, t_dongle *dongle)
 	// Retirer de la queue et prendre le dongle
 	queue_pop(dongle->queue);
 	dongle->is_taken = 1;
+	pthread_cond_broadcast(&dongle->cond);
 	print_log(coder->sim, coder->id, "has taken a dongle");
 	pthread_mutex_unlock(&dongle->mutex);
 }
