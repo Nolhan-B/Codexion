@@ -9,8 +9,6 @@ int main(int ac, char **av)
 		return (1);
 	if (init_simulation(&sim) == -1)
 		return (fprintf(stderr, "Error: init failed\n"), 1);
-
-	printf("Simulation initialized with %d coders\n", sim.config.nb_coders);
 	i = 0;
 	while (i < sim.config.nb_coders)
 	{

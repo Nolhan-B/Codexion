@@ -73,65 +73,86 @@ static void release_dongle(t_coder *coder, t_dongle *dongle)
 
 void *coder_routine(void *arg)
 {
-	t_coder		*coder;
-	t_dongle	*first;
-	t_dongle	*second;
+    t_coder     *coder;
+    t_dongle    *first;
+    t_dongle    *second;
+    int         single_coder;
 
-	coder = (t_coder *)arg;
-	printf("Coder %d started\n", coder->id);
+    coder = (t_coder *)arg;
 
-	if (coder->left_dongle < coder->right_dongle)
-	{
-		first = coder->left_dongle;
-		second = coder->right_dongle;
-	}
-	else
-	{
-		first = coder->right_dongle;
-		second = coder->left_dongle;
-	}
+	if (coder->sim->config.nb_compiles_required == 0)
+		return (NULL);
 
-	while (is_running(coder->sim))
-	{
-		if (!is_running(coder->sim))
-			break;
+    single_coder = (coder->sim->config.nb_coders == 1);
 
-		take_dongle(coder, first);
-		if (!is_running(coder->sim))
-		{
-			release_dongle(coder, first);
-			break;
-		}
-		take_dongle(coder, second);
-		if (!is_running(coder->sim))
-		{
-			release_dongle(coder, first);
-			release_dongle(coder, second);
-			break;
-		}
+    if (!single_coder)
+    {
+        if (coder->left_dongle < coder->right_dongle)
+        {
+            first = coder->left_dongle;
+            second = coder->right_dongle;
+        }
+        else
+        {
+            first = coder->right_dongle;
+            second = coder->left_dongle;
+        }
+    }
+    else
+    {
+        first = coder->left_dongle;
+        second = NULL;  // Pas de second dongle
+    }
 
-		coder->last_compile_start = get_time_ms();
-		print_log(coder->sim, coder->id, "is compiling");
-		usleep(coder->sim->config.time_to_compile * 1000);
+    while (is_running(coder->sim))
+    {
+        if (!is_running(coder->sim))
+            break;
 
-		release_dongle(coder, first);
-		release_dongle(coder, second);
+        // Prendre le premier dongle
+        take_dongle(coder, first);
+        if (!is_running(coder->sim))
+        {
+            release_dongle(coder, first);
+            break;
+        }
 
-		if (!is_running(coder->sim))
-			break;
+        // Prendre le second dongle (sauf si 1 coder)
+        if (!single_coder)
+        {
+            take_dongle(coder, second);
+            if (!is_running(coder->sim))
+            {
+                release_dongle(coder, first);
+                release_dongle(coder, second);
+                break;
+            }
+        }
 
-		print_log(coder->sim, coder->id, "is debugging");
-		usleep(coder->sim->config.time_to_debug * 1000);
+        coder->last_compile_start = get_time_ms();
+        print_log(coder->sim, coder->id, "is compiling");
+        usleep(coder->sim->config.time_to_compile * 1000);
 
-		if (!is_running(coder->sim))
-			break;
+        // Relâcher les dongles
+        release_dongle(coder, first);
+        if (!single_coder)
+            release_dongle(coder, second);
 
-		print_log(coder->sim, coder->id, "is refactoring");
-		usleep(coder->sim->config.time_to_refactor * 1000);
+        if (!is_running(coder->sim))
+            break;
 
-		coder->compile_count++;
-		if (coder->compile_count >= coder->sim->config.nb_compiles_required)
-			break;
-	}
-	return (NULL);
+        print_log(coder->sim, coder->id, "is debugging");
+        usleep(coder->sim->config.time_to_debug * 1000);
+
+        if (!is_running(coder->sim))
+            break;
+
+        print_log(coder->sim, coder->id, "is refactoring");
+        usleep(coder->sim->config.time_to_refactor * 1000);
+
+        coder->compile_count++;
+        if (coder->compile_count >= coder->sim->config.nb_compiles_required)
+            break;
+    }
+    return (NULL);
 }
