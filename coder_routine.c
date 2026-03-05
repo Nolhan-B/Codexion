@@ -89,12 +89,18 @@ void	*coder_routine(void *arg)
 	coder = (t_coder *)arg;
 	if (coder->sim->config.nb_compiles_required == 0)
 		return (NULL);
+	if (coder->sim->config.nb_coders == 1)
+	{
+		take_dongle(coder, coder->left_dongle);
+		usleep(coder->sim->config.time_to_burnout * 1000);
+		return (NULL);
+	}
 	single = (coder->sim->config.nb_coders == 1);
 	setup_dongles(coder, &first, &second, single);
 	while (is_running(coder->sim))
 	{
 		if (!work_cycle(coder, first, second, single))
-			break;
+			break ;
 	}
 	return (NULL);
 }
