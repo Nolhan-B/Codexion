@@ -76,39 +76,52 @@ typedef struct s_sim
 }	t_sim;
 
 /* codexion.c */
-int		parse_args(int ac, char **av, t_config *config);
+int					parse_args(int ac, char **av, t_config *config);
 
 /* init.c */
-void	destroy_initiated_mutex(t_sim *sim, int last_done);
-int		init_dongles(t_sim *sim);
-void	init_coders(t_sim *sim);
-int		init_simulation(t_sim *sim);
+void				destroy_initiated_mutex(t_sim *sim, int last_done);
+int					init_dongles(t_sim *sim);
+void				init_coders(t_sim *sim);
+int					init_simulation(t_sim *sim);
 
 /* destroy_sim.c */
-void	destroy_sim(t_sim *sim);
+void				destroy_sim(t_sim *sim);
 
 /* utils.c */
-int		is_running(t_sim *sim);
-void	stop_simulation(t_sim *sim);
-long	get_time_ms(void);
-void	print_log(t_sim *sim, int coder_id, char *msg);
+int					is_running(t_sim *sim);
+void				stop_simulation(t_sim *sim);
+long				get_time_ms(void);
+void				print_log(t_sim *sim, int coder_id, char *msg);
 
 /* init_th.c */
-int		create_threads(t_sim *sim);
+int					create_threads(t_sim *sim);
 
 /* coders.c */
-void	*coder_routine(void *arg);
+void				wait_cooldown(t_dongle *dongle);
+long				calculate_priority(t_coder *coder);
+void				take_dongle(t_coder *coder, t_dongle *dongle);
+void				release_dongle(t_coder *coder, t_dongle *dongle);
+
+/* coder_routine.c */
+void				*coder_routine(void *arg);
 
 /* monitor.c */
-void	*monitor_routine(void *arg);
+void				*monitor_routine(void *arg);
 
 /* queue_init.c */
 t_priority_queue	*queue_init(int capacity, t_scheduler scheduler);
 void				queue_destroy(t_priority_queue *queue);
 
+/* monitor_utils.c */
+int					check_coder_deadline(t_sim *sim, int i, long now);
+
 /* queue.c */
+int					queue_is_empty(t_priority_queue *queue);
+void				bubble_up(t_priority_queue *queue, int index);
+void				bubble_down(t_priority_queue *queue, int index);
+
+/* queue_ops.c */
 int					queue_push(t_priority_queue *queue, t_coder *coder, long priority);
 t_coder				*queue_pop(t_priority_queue *queue);
-int					queue_is_empty(t_priority_queue *queue);
 
 #endif

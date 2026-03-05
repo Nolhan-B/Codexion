@@ -10,7 +10,7 @@ int	is_running(t_sim *sim)
 	return (running);
 }
 
-void stop_simulation(t_sim *sim)
+void	stop_simulation(t_sim *sim)
 {
 	pthread_mutex_lock(&sim->mutex);
 	sim->running = 0;
@@ -25,12 +25,13 @@ long	get_time_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void print_log(t_sim *sim, int coder_id, char *msg)
+void	print_log(t_sim *sim, int coder_id, char *msg)
 {
-	long timestamp;
+	long	timestamp;
 
 	pthread_mutex_lock(&sim->log_mutex);
 	timestamp = get_time_ms() - sim->start_time;
-	printf("%ld %d %s\n", timestamp, coder_id, msg);
+	if (is_running(sim))
+		printf("%ld %d %s\n", timestamp, coder_id, msg);
 	pthread_mutex_unlock(&sim->log_mutex);
 }

@@ -1,5 +1,6 @@
 #include "codexion.h"
-void destroy_sim(t_sim *sim)
+
+void	destroy_sim(t_sim *sim)
 {
 	int	i;
 

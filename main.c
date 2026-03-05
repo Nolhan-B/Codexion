@@ -1,9 +1,9 @@
 #include "codexion.h"
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	t_sim sim;
-	int i;
+	t_sim	sim;
+	int		i;
 
 	if (parse_args(ac, av, &sim.config) == -1)
 		return (1);

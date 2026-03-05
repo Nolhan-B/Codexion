@@ -1,35 +1,28 @@
 NAME = codexion
 
 CC = cc
-CCFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread
+INCLUDES = -I .
 
-SRC = \
-codexion.c \
-main.c \
-init.c \
-utils.c \
-destroy_sim.c \
-init_th.c \
-coders.c \
-monitor.c \
-queue_init.c \
-queue.c
+SRCS = codexion.c main.c init.c utils.c destroy_sim.c init_th.c \
+       coders.c coder_routine.c monitor.c monitor_utils.c \
+       queue_init.c queue_ops.c queue.c
 
-OBJ = $(SRC:.c=.o)
+OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(CCFLAGS) $(OBJ) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 %.o: %.c
-	$(CC) $(CCFLAGS) -c $< -o $@ -I .
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ)
+	rm -f $(OBJS)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 
