@@ -1,6 +1,6 @@
 #include "codexion.h"
 
-int	main(int ac, char **av)
+int main(int ac, char **av)
 {
 	t_sim	sim;
 	int		i;
@@ -12,10 +12,12 @@ int	main(int ac, char **av)
 	i = 0;
 	while (i < sim.config.nb_coders)
 	{
-		pthread_join(sim.coders[i].thread, NULL);
+		if (pthread_join(sim.coders[i].thread, NULL) != 0)
+			fprintf(stderr, "Warning: pthread_join failed for coder %d\n", i);
 		i++;
 	}
-	pthread_join(sim.monitor_thread, NULL);
+	if (pthread_join(sim.monitor_thread, NULL) != 0)
+		fprintf(stderr, "Warning: pthread_join failed for monitor\n");
 	destroy_sim(&sim);
 	return (0);
 }
