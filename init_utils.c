@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_th.c                                          :+:      :+:    :+:   */
+/*   init_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nbilyj <nbilyj@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/06 10:57:36 by nbilyj            #+#    #+#             */
-/*   Updated: 2026/03/06 10:57:39 by nbilyj           ###   ########.fr       */
+/*   Created: 2026/03/06 11:09:31 by nbilyj            #+#    #+#             */
+/*   Updated: 2026/03/06 11:09:34 by nbilyj           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static int	create_coder_threads(t_sim *sim)
+void	destroy_initiated_mutex(t_sim *sim, int last_done)
 {
-	int	i;
+	int	j;
 
-	i = 0;
-	while (i < sim->config.nb_coders)
+	j = 0;
+	while (j < last_done)
 	{
-		if (pthread_create(&sim->coders[i].thread, NULL,
-				coder_routine, &sim->coders[i]))
-			return (-1);
-		i++;
+		pthread_mutex_destroy(&sim->dongles[j].mutex);
+		pthread_cond_destroy(&sim->dongles[j].cond);
+		queue_destroy(sim->dongles[j].queue);
+		j++;
 	}
-	return (0);
-}
-
-int	create_threads(t_sim *sim)
-{
-	if (create_coder_threads(sim) == -1)
-		return (-1);
-	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
-		return (-1);
-	return (0);
 }

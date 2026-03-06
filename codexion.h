@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   codexion.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nbilyj <nbilyj@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/06 10:49:01 by nbilyj            #+#    #+#             */
+/*   Updated: 2026/03/06 11:09:06 by nbilyj           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CODEXION_H
 # define CODEXION_H
 
@@ -8,8 +20,8 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef struct s_coder t_coder;
-typedef struct s_sim t_sim;
+typedef struct s_coder	t_coder;
+typedef struct s_sim	t_sim;
 
 typedef enum e_scheduler
 {
@@ -83,6 +95,11 @@ void				destroy_initiated_mutex(t_sim *sim, int last_done);
 int					init_dongles(t_sim *sim);
 void				init_coders(t_sim *sim);
 int					init_simulation(t_sim *sim);
+int					init_resources(t_sim *sim);
+int					init_single_dongle(t_sim *sim, int i);
+
+/* init_utils.c */
+void				destroy_initiated_mutex(t_sim *sim, int last_done);
 
 /* destroy_sim.c */
 void				destroy_sim(t_sim *sim);
@@ -121,7 +138,7 @@ void				bubble_up(t_priority_queue *queue, int index);
 void				bubble_down(t_priority_queue *queue, int index);
 
 /* queue_ops.c */
-int					queue_push(t_priority_queue *queue, t_coder *coder, long priority);
+int					queue_push(t_priority_queue *q, t_coder *c, long p);
 t_coder				*queue_pop(t_priority_queue *queue);
 
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   coders.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nbilyj <nbilyj@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/06 10:42:59 by nbilyj            #+#    #+#             */
+/*   Updated: 2026/03/06 10:43:22 by nbilyj           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 
 void	wait_cooldown(t_dongle *dongle)
@@ -8,7 +20,7 @@ void	wait_cooldown(t_dongle *dongle)
 	{
 		now = get_time_ms();
 		if (now >= dongle->cooldown_end)
-			break;
+			break ;
 		pthread_mutex_unlock(&dongle->mutex);
 		usleep(1000);
 		pthread_mutex_lock(&dongle->mutex);
@@ -35,7 +47,7 @@ void	take_dongle(t_coder *coder, t_dongle *dongle)
 	if (queue_push(dongle->queue, coder, priority) == -1)
 	{
 		pthread_mutex_unlock(&dongle->mutex);
-		return;
+		return ;
 	}
 	while (get_time_ms() < dongle->cooldown_end)
 	{

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   queue.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nbilyj <nbilyj@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/06 11:18:41 by nbilyj            #+#    #+#             */
+/*   Updated: 2026/03/06 11:18:42 by nbilyj           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 
 int	queue_is_empty(t_priority_queue *queue)
@@ -32,7 +44,7 @@ void	bubble_up(t_priority_queue *queue, int index)
 			index = parent;
 		}
 		else
-			break;
+			break ;
 	}
 }
 
@@ -58,6 +70,6 @@ void	bubble_down(t_priority_queue *queue, int index)
 			index = smallest;
 		}
 		else
-			break;
+			break ;
 	}
 }

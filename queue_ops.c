@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   queue_ops.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nbilyj <nbilyj@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/06 10:56:33 by nbilyj            #+#    #+#             */
+/*   Updated: 2026/03/06 11:19:06 by nbilyj           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 
-int	queue_push(t_priority_queue *queue, t_coder *coder, long priority)
+int	queue_push(t_priority_queue *q, t_coder *c, long p)
 {
-	if (queue->size >= queue->capacity)
+	if (q->size >= q->capacity)
 		return (-1);
-	queue->nodes[queue->size].coder = coder;
-	queue->nodes[queue->size].priority = priority;
-	bubble_up(queue, queue->size);
-	queue->size++;
+	q->nodes[q->size].coder = c;
+	q->nodes[q->size].priority = p;
+	bubble_up(q, q->size);
+	q->size++;
 	return (0);
 }
 

@@ -1,20 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nbilyj <nbilyj@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/06 11:09:13 by nbilyj            #+#    #+#             */
+/*   Updated: 2026/03/06 11:09:26 by nbilyj           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 
-void	destroy_initiated_mutex(t_sim *sim, int last_done)
-{
-	int	j;
-
-	j = 0;
-	while (j < last_done)
-	{
-		pthread_mutex_destroy(&sim->dongles[j].mutex);
-		pthread_cond_destroy(&sim->dongles[j].cond);
-		queue_destroy(sim->dongles[j].queue);
-		j++;
-	}
-}
-
-static int	init_single_dongle(t_sim *sim, int i)
+int	init_single_dongle(t_sim *sim, int i)
 {
 	if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
 	{
@@ -73,7 +71,7 @@ void	init_coders(t_sim *sim)
 	}
 }
 
-static int	init_resources(t_sim *sim)
+int	init_resources(t_sim *sim)
 {
 	if (init_dongles(sim) == -1)
 	{
