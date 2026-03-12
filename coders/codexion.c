@@ -39,7 +39,7 @@ static int	parse_int_arg(char *str)
 			return (-1);
 		i++;
 	}
-	result = atoi(str);
+	result = safe_atoi(str);
 	if (result < 0)
 		return (-1);
 	return (result);

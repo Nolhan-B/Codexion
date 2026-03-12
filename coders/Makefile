@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 INCLUDES = -I .
 
-SRCS = codexion.c main.c init.c utils.c destroy_sim.c init_th.c \
+SRCS = codexion_utils.c codexion.c main.c init.c utils.c destroy_sim.c init_th.c \
        init_utils.c coders.c coder_routine.c monitor.c monitor_utils.c \
        queue_init.c queue_ops.c queue.c
 

@@ -87,6 +87,9 @@ typedef struct s_sim
 	pthread_t		monitor_thread;
 }	t_sim;
 
+/* codexion_utils.c*/
+int					safe_atoi(char *str);
+
 /* codexion.c */
 int					parse_args(int ac, char **av, t_config *config);
 
