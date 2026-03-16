@@ -28,6 +28,8 @@ static void	swap_nodes(t_queue_node *a, t_queue_node *b)
 
 static int	is_higher_priority(t_priority_queue *queue, int i, int j)
 {
+	if (queue->nodes[i].priority == queue->nodes[j].priority)
+		return (queue->nodes[i].coder->id > queue->nodes[j].coder->id);
 	return (queue->nodes[i].priority < queue->nodes[j].priority);
 }
 

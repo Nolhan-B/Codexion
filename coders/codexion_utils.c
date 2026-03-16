@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-static int    is_digit(char *str)
+static int	is_digit(char *str)
 {
-	int    i;
-	int    has_digit;
+	int	i;
+	int	has_digit;
 
 	i = 0;
 	has_digit = 0;
@@ -33,11 +33,11 @@ static int    is_digit(char *str)
 	return (has_digit);
 }
 
-static long long    ft_atol(char *str)
+static long long	ft_atol(char *str)
 {
-	int            i;
-	long long    result;
-	long long    sign;
+	int			i;
+	long long	result;
+	long long	sign;
 
 	result = 0;
 	sign = 1;
@@ -61,9 +61,9 @@ static long long    ft_atol(char *str)
 	return (result * sign);
 }
 
-int    safe_atoi(char *str)
+int	safe_atoi(char *str)
 {
-	long long    value;
+	long long	value;
 
 	if (!is_digit(str))
 		return (-1);
